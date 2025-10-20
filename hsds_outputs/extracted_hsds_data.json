@@ -1,0 +1,102 @@
+{
+  "organization": {
+    "name": "Teen Feed",
+    "alternate_name": null,
+    "description": "Teen Feed works with the local community to prepare and serve warm, healthy, and balanced family meals in a safe youth-led donated space.",
+    "url": null
+  },
+  "services_at_locations": [
+    {
+      "service": {
+        "name": "U-District Dinner",
+        "description": "Provides meals, connections, and resources to youth and young adults, ages 13-25, in the University District Seattle.",
+        "status": "active",
+        "access_requirements": "Free, Confidential, No ID Required, Low-barrier",
+        "service_area": "University District Seattle",
+        "auxiliary_resources": "toiletries, cold weather gear, backpacks, first aid kits, underwear",
+        "interpretation_services": null,
+        "application_process": "Join us 7-8PM every night.",
+        "wait_time": null,
+        "fees": "Free",
+        "accreditations": null,
+        "eligibility": "Youth and young adults, ages 13-25",
+        "schedules": [
+          {
+            "description": "Dinner service available every day",
+            "freq": "DAILY",
+            "byday": "MO,TU,WE,TH,FR,SA,SU",
+            "bymonthday": null,
+            "opens_at": "19:00:00",
+            "closes_at": "20:00:00",
+            "year_round": true
+          }
+        ],
+        "phones": []
+      },
+      "location": {
+        "name": "University Congregational Church of Christ",
+        "description": null,
+        "latitude": null,
+        "longitude": null,
+        "addresses": [
+          {
+            "address_1": "4515 16th Ave NE",
+            "city": "Seattle",
+            "state_province": "WA",
+            "postal_code": "98105",
+            "country": "US",
+            "address_type": "physical"
+          }
+        ],
+        "cross_streets": "NE 45th & 16th Ave NE"
+      },
+      "description": null
+    },
+    {
+      "service": {
+        "name": "In-Reach (Drop-In) Offers Supplies and Support",
+        "description": "Provides basic needs supplies and connection to resources in a safe space providing community.",
+        "status": "active",
+        "access_requirements": "Free, Confidential, No ID Required, Resources Available On-site",
+        "service_area": "University District Seattle",
+        "auxiliary_resources": null,
+        "interpretation_services": null,
+        "application_process": "Drop-in during service hours.",
+        "wait_time": null,
+        "fees": "Free",
+        "accreditations": null,
+        "eligibility": "Youth and young adults, ages 13-25",
+        "schedules": [
+          {
+            "description": "Drop-in service available on Tuesday and Thursday",
+            "freq": "WEEKLY",
+            "byday": "TU,TH",
+            "bymonthday": null,
+            "opens_at": "16:30:00",
+            "closes_at": "18:30:00",
+            "year_round": null
+          }
+        ],
+        "phones": []
+      },
+      "location": {
+        "name": "ROOTS Young Adult Shelter",
+        "description": null,
+        "latitude": null,
+        "longitude": null,
+        "addresses": [
+          {
+            "address_1": "4541 19th Ave NE",
+            "city": "Seattle",
+            "state_province": "WA",
+            "postal_code": "98105",
+            "country": "US",
+            "address_type": "physical"
+          }
+        ],
+        "cross_streets": null
+      },
+      "description": null
+    }
+  ]
+}
