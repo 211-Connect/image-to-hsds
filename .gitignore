@@ -1,0 +1,4 @@
+.env
+venv/
+
+baml_client
