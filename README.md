@@ -53,6 +53,8 @@ The script:
 - BAML generates a Python client (`baml_client`) from `baml_src/`.
 - If you edit `.baml` files, regenerate the client with your local BAML tooling.
 - Ensure `OPENAI_API_KEY` is set before running.
+- With baml-cli installed, you can run baml-cli generate to create `baml_client`
+- Documentation on BAML: https://docs.boundaryml.com/home
 
 ## License
 MIT License
