@@ -1,104 +1,67 @@
-// Function to extract HSDS-compliant data from a community services flyer image
-// Enhanced with better extraction prompts based on real-world flyer analysis
+// Function to extract HSDS-compliant data from a community services image
+// Enhanced version with improved clarity and examples
 
-function ExtractHSDSFromImage(flyer_image: image) -> HSDSData {
+function ExtractHSDSFromImage(image: image) -> HSDSData {
   client GPT4Vision
   prompt #"
-    {{ _.role('system') }}
-    You are an expert at extracting structured information from community service flyers
-    and organizing it according to the Human Services Data Specification (HSDS).
-    
-    Pay special attention to:
-    - Access requirements and barriers (or lack thereof)
-    - Geographic service areas
-    - Auxiliary resources and supplies
-    - Cross-street references for locations
-    - Year-round vs. seasonal operation
+  {{ _.role('system') }}
+  You extract structured data from images and format it to HSDS. Produce accurate, complete HSDS data for service directories. Carefully distinguish organization info from services and locations.
 
-    {{ _.role('user') }}
-    Please analyze the following community services flyer image and extract all relevant information
-    to create HSDS-compliant data.
+  {{ _.role('user') }}
+  Analyze the image and output HSDS-compliant data.
 
-    {{ flyer_image }}
+  {{ image }}
+  
+  ## EXTRACTION INSTRUCTIONS
+  
+  ### KEY OBJECTIVE
+  Extract HSDS data strictly per {{ ctx.output_format }} and types in baml_src/hsds_types.baml. Return complete, accurate data with no extra commentary.
 
-    Extract the following information:
+  ### HIGH-IMPACT RULES
+  - **Cardinality**: One ServiceAtLocation per unique service-location pair.
+  - **Org vs Service**: Org description = mission/impact/approach. Service description = what/how of that service only.
+  - **Access vs Application**: Barriers/attributes vs steps to obtain service.
+  - **Completeness**: Extract all services and locations; do not merge distinct items.
 
-    1. Organization Information:
-       - Name of the organization providing services
-       - Description of what they do
-       - Website URL if available
-       - Tagline or mission statement if present
-    
-    2. Services and Locations:
-       - For each service mentioned in the flyer:
-         * Service name
-         * Detailed description of the service
-         * Who is eligible (age range, target population)
-         * Schedule information (days of week, times)
-         * Any fees or cost information ("Free" counts as fee information)
-         * Application process or how to access
-         
-         **NEW - Pay special attention to:**
-         * ACCESS REQUIREMENTS: Look for phrases like:
-           - "No ID Required" / "ID Required"
-           - "Free" / "Confidential"
-           - "Low-barrier" / "No-barrier" / "Drop-in welcome"
-           - "Walk-in" / "Appointment required"
-           - "Resources Available On-Site"
-           Extract these into the access_requirements field
-         
-         * SERVICE AREA: Look for geographic coverage like:
-           - "University District Seattle"
-           - "Downtown" / "Capitol Hill"
-           - Neighborhood or district names
-           - County or city names
-           Extract this into the service_area field
-         
-         * AUXILIARY RESOURCES: Look for additional items/resources provided:
-           - "toiletries, cold weather gear, backpacks"
-           - "clothing, hygiene products"
-           - "first aid kits, underwear"
-           - Any supplies or amenities beyond the main service
-           Extract these into the auxiliary_resources field
-         
-         * YEAR-ROUND OPERATION: Look for:
-           - "365 days a year" / "Year-round"
-           - "Open every day"
-           Set year_round to true if mentioned
-         
-    3. Location Details:
-       - Name of each location where services are provided
-       - Full address (street, city, state, postal code)
-       - Any location-specific details
-       
-       **NEW - Also extract:**
-       * CROSS STREETS: Look for intersection or cross-street references:
-         - Parenthetical references like "(NE 45th & 16th Ave NE)"
-         - "Corner of X and Y"
-         - "Near the intersection of..."
-         Extract these into the cross_streets field
-    
-    4. Contact Information:
-       - Phone numbers with their types
-       - Any special instructions about confidentiality or ID requirements
+  ### NORMALIZATION
+  - **Schedules**:
+    - `freq`: DAILY (every day), WEEKLY (specific days), MONTHLY (specific dates).
+    - `byday` (WEEKLY only): MO, TU, WE, TH, FR, SA, SU (list or range, e.g., MO,TU,WE,TH,FR).
+    - `opens_at`/`closes_at`: HH:MM:SS 24h (e.g., 19:00:00 for 7 PM).
+    - `year_round`: true if “365 days”/“year‑round”/“open every day”; else null/false.
+    - `description`: concise human-readable summary.
+  - **Phones**: Include type and optional description; [] if none.
+  - **Cross_streets**: Use exact phrasing if present (e.g., "NE 45th & 16th Ave NE"); infer only if unambiguous.
+  - **Latitude/Longitude**: null.
+  - **Fees**: “Free”, “Sliding scale”, specific amount, or null.
+  - **Auxiliary_resources**: Only if explicitly mentioned; comma-separated.
 
-    5. Schedule Formatting:
-       - For days of week, use standard abbreviations: MO, TU, WE, TH, FR, SA, SU
-       - For multiple specific days (like "Tuesday and Thursday"), use: "TU,TH"
-       - For ranges (like "Monday-Friday"), use: "MO,TU,WE,TH,FR"
-       - For "7 days a week" or "every day", use: "MO,TU,WE,TH,FR,SA,SU"
-       - Use 24-hour time format (HH:MM:SS) - convert PM times correctly (7PM = 19:00:00)
-       - Determine frequency: DAILY (every day), WEEKLY (specific days), MONTHLY (specific dates)
+  ### AMBIGUITY RESOLUTION
+  - Prefer explicit labels/headers.
+  - If conflicting, use the most local/specific context.
+  - When uncertain, set field to null rather than guessing.
 
-    General Guidelines:
-    - If information is not clearly stated in the image, use null for optional fields
-    - Use "active" as the status for all services unless otherwise indicated
-    - For addresses, use "physical" as the address_type
-    - Extract phone numbers in their clearest format
-    - Set country to "US" for all addresses unless otherwise specified
-    - Be thorough in reading all text, including fine print and banner text
-    - Look for emphasis text (bold, larger font) as it often contains key information
+  ### DATA QUALITY
+  - Read all visible text (headers, fine print, banners).
+  - Use exact wording where possible.
+  - Avoid duplication across fields.
+  - Ensure coverage of all services and locations shown.
 
-    {{ ctx.output_format }}
+  ### MINIMAL SCHEDULE EXAMPLE
+  {
+    description: "Daily 7:00 PM–8:00 PM, year-round",
+    freq: "DAILY",
+    byday: "MO,TU,WE,TH,FR,SA,SU",
+    opens_at: "19:00:00",
+    closes_at: "20:00:00",
+    year_round: true
+  }
+
+  ### FIELD PRIORITY
+  1. **Explicit labels/headers**
+  2. **Context clues**
+  3. **HSDS conventions** (fees in fees, etc.)
+
+  {{ ctx.output_format }}
   "#
 }

@@ -1,4 +1,4 @@
-// HSDS Core Types - Enhanced with quick wins from flyer analysis
+// HSDS core types with extensions for flyer-extracted details
 
 class Organization {
   name string @description("The official or public name of the organization")

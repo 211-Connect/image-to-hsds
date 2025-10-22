@@ -117,13 +117,13 @@ def print_summary(hsds_data: HSDSData):
     print("HSDS DATA EXTRACTION SUMMARY")
     print("=" * 80)
     
-    print(f"\n📋 ORGANIZATION")
+    print(f"\nORGANIZATION")
     print(f"   Name: {hsds_data.organization.name}")
     print(f"   Description: {hsds_data.organization.description}")
     if hsds_data.organization.url:
         print(f"   Website: {hsds_data.organization.url}")
     
-    print(f"\n🏢 SERVICES & LOCATIONS ({len(hsds_data.services_at_locations)} found)")
+    print(f"\nSERVICES & LOCATIONS ({len(hsds_data.services_at_locations)} found)")
     
     for idx, sal in enumerate(hsds_data.services_at_locations, 1):
         print(f"\n   [{idx}] SERVICE: {sal.service.name}")
@@ -150,7 +150,7 @@ def print_summary(hsds_data: HSDSData):
             for phone in sal.service.phones:
                 print(f"         - {phone.number} ({phone.phone_type})")
         
-        print(f"\n       📍 LOCATION: {sal.location.name}")
+        print(f"\n       LOCATION: {sal.location.name}")
         if sal.location.description:
             print(f"          Description: {sal.location.description}")
         
@@ -175,7 +175,7 @@ def save_to_json(hsds_data: HSDSData, output_path: str):
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(data_dict, f, indent=2, ensure_ascii=False)
     
-    print(f"\n✅ HSDS data saved to: {output_path}")
+    print(f"\nHSDS data saved to: {output_path}")
 
 
 def main():
@@ -198,10 +198,10 @@ def main():
         output_file = "./hsds_outputs/extracted_hsds_data.json"
         save_to_json(hsds_data, output_file)
         
-        print("\n✨ Extraction complete!")
+        print("\nExtraction complete.")
         
     except Exception as e:
-        print(f"\n❌ Error: {e}", file=sys.stderr)
+        print(f"\nError: {e}", file=sys.stderr)
         import traceback
         traceback.print_exc()
         sys.exit(1)
