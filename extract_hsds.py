@@ -8,6 +8,7 @@ import os
 import json
 import sys
 from pathlib import Path
+from datetime import datetime
 from dotenv import load_dotenv
 
 # Import BAML client
@@ -194,8 +195,11 @@ def main():
         # Print summary
         print_summary(hsds_data)
         
+        # Generate a dynamic output filename with a timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_file = f"./hsds_outputs/extracted_hsds_data_{timestamp}.json"
+
         # Save to JSON file
-        output_file = "./hsds_outputs/extracted_hsds_data.json"
         save_to_json(hsds_data, output_file)
         
         print("\nExtraction complete.")
